@@ -1,23 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Home</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - OLX</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link href="/assets/css/main.css" rel="stylesheet">
 </head>
-<body class="bg-light">
 
+<body>
+  <!-- Navbar -->
   <div id="header" class="sticky-top"></div>
-  <div class="container mt-5 text-center">
-    <h1>Welcome to the Home Page</h1>
-    <p id="welcomeMessage">You have successfully logged in!</p>
-    <!-- <button id="logoutBtn" class="btn btn-danger mt-4">Logout</button> -->
-  </div>
+  <!-- Main Content -->
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container">
+        <h1>Find Anything, Anywhere</h1>
+        <p>Buy and sell everything from used cars to mobile phones and computers, or search for property, jobs, and more in India.</p>
+        <div class="input-group search-bar">
+          <input type="text" class="form-control" placeholder="What are you looking for?" aria-label="Search input">
+          <button class="btn btn-primary" type="button">Search</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="container my-5 py-5">
+      <h2 class="section-title">Popular Categories</h2>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        <div class="col">
+          <div class="card category-card text-center h-100">
+            <img src="https://placehold.co/400x250/002f34/ffffff?text=Cars" class="card-img-top" alt="Cars">
+            <div class="card-body">
+              <h5 class="card-title">Cars</h5>
+              <p class="card-text text-muted">Explore a wide range of vehicles.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card category-card text-center h-100">
+            <img src="https://placehold.co/400x250/002f34/ffffff?text=Mobiles" class="card-img-top" alt="Mobiles">
+            <div class="card-body">
+              <h5 class="card-title">Mobiles</h5>
+              <p class="card-text text-muted">New and used smartphones.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card category-card text-center h-100">
+            <img src="https://placehold.co/400x250/002f34/ffffff?text=Properties" class="card-img-top" alt="Properties">
+            <div class="card-body">
+              <h5 class="card-title">Properties</h5>
+              <p class="card-text text-muted">Find your dream home or plot.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card category-card text-center h-100">
+            <img src="https://placehold.co/400x250/002f34/ffffff?text=Electronics" class="card-img-top" alt="Electronics">
+            <div class="card-body">
+              <h5 class="card-title">Electronics</h5>
+              <p class="card-text text-muted">Gadgets, appliances, and more.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <div class="container">
+        <h2>Sell Your Items Today!</h2>
+        <p>List your products in minutes and reach millions of buyers across India.</p>
+        <a href="/views/addproduct.html" class="btn">Post an Ad</a>
+      </div>
+    </section>
+  </main>
+
+
 
   <div id="footer"></div>
 
+  <!-- Scripts -->
   <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/controllers/authController.js"></script>
   <script src="/commmon/script.js"></script>
+ 
 </body>
+
 </html>

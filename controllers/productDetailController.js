@@ -1,55 +1,59 @@
- $(document).ready(function () {
-      const urlParams = new URLSearchParams(window.location.search);
-      const productId = urlParams.get('id');
+$(document).ready(function () {
+  const urlParams = new URLSearchParams(window.location.search);
+  const productId = urlParams.get('id');
 
-      const products = JSON.parse(localStorage.getItem('products')) || [];
-      const product = products.find(p => p.id === productId);
+  const products = JSON.parse(localStorage.getItem('products')) || [];
+  const product = products.find(p => p.id === productId);
 
-      const container = $('#productDetail');
+  const container = $('#productDetail');
 
-      if (!product) {
-        container.html(`<div class="text-center text-danger">Product not found!</div>`);
-        return;
-      }
+  if (!product) {
+    container.html(`<div class="text-center text-danger">Product not found!</div>`);
+    return;
+  }
 
-      const detailHTML = `
-        <div class="col-lg-8">
+  const detailHTML = `
+       <div class="container py-4">
           <div class="card shadow p-4">
-            <div class="row g-4">
-              <div class="col-md-5">
-                <img src="${product.image}" class="product-img" alt="${product.name}">
+            <div class="row g-4 align-items-center">
+              <!-- Product Image (responsive) -->
+              <div class="col-12 col-md-6">
+                <img src="${product.image}" 
+                    alt="${product.name}" 
+                    class="img-fluid rounded w-100" 
+                    style="max-height: 400px; object-fit: cover; border: 1px solid #ccc;">
               </div>
-              <div class="col-md-7">
+
+              <!-- Product Details -->
+              <div class="col-12 col-md-6">
                 <h4 class="mb-3">${product.name}</h4>
-                <div class="detail-label">Price:</div>
-                <div class="detail-value">₹${product.price}</div>
 
-                <div class="detail-label">Category:</div>
-                <div class="detail-value">${product.category}</div>
+                <div class="mb-2"><strong>Price:</strong> ₹${product.price}</div>
+                <div class="mb-2"><strong>Category:</strong> ${product.category}</div>
+                <div class="mb-2"><strong>Description:</strong><br> ${product.description}</div>
+                <div class="mb-2"><strong>Location:</strong> ${product.city}, ${product.state}</div>
+                <div class="mb-3"><strong>Seller:</strong> <span class="text-primary fw-semibold">${product.seller_name}</span></div>
 
-                <div class="detail-label">Description:</div>
-                <div class="detail-value">${product.description}</div>
-
-                <div class="detail-label">Location:</div>
-                <div class="detail-value">${product.city}, ${product.state}</div>
-
-                <div class="detail-label">Seller:</div>
-                <div class="detail-value text-primary fw-semibold">${product.seller_name}</div>
-
-                <button class="btn btn-success mt-3" onclick="startChat('${product.seller_name}')">
-                  <i class="fa fa-comments me-1"></i> Chat with ${product.seller_name}
-                </button>
+                <a href="/views/chat.html?product_id=${product.id}">
+                  <button class="btn btn-success w-100 w-md-auto" id="chatBtn">
+                    <i class="fa fa-comments me-1"></i> Chat with ${product.seller_name}
+                  </button>
+                </a>
               </div>
             </div>
           </div>
         </div>
+
+
       `;
 
-      container.html(detailHTML);
-    });
+  container.html(detailHTML);
 
-    function startChat(sellerName) {
-      alert("Starting chat with " + sellerName);
-      // Future: redirect to real-time chat page with sellerName as query param
-      // window.location.href = `/views/chat.html?seller=${encodeURIComponent(sellerName)}`;
-    }
+
+  $("#chatBtn").click(function () {
+    localStorage.setItem("chatProductId", product.id);
+    localStorage.setItem("chatSellerId", product.seller_id);
+    window.location.href = "chat.html";
+  });
+});
+
