@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OLX Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+
+<body>
+    <!-- header -->
+
+    <header class="bg-light shadow-sm">
+        <nav class="navbar navbar-expand-lg navbar-light container py-2">
+            <a class="navbar-brand fw-bold text-primary" href="#">
+                <i class="fa-solid fa-store"></i> OLX
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-3">
+                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/views/login.html">Login</a></li>
+                     <li class="nav-item"><a class="nav-link" href="/views/register.html">Registration</a></li>
+                   <!-- <li class="nav-item"><a class="nav-link" href="#">Chat</a></li> -->
+                </ul>
+
+                <!-- <a href="/views/login.html" class="btn btn-primary ms-3">Login</a> -->
+            </div>
+        </nav>
+    </header>
+
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1>Find Anything, Anywhere</h1>
+            <p>Buy and sell everything from used cars to mobile phones and computers, or search for property, jobs, and
+                more in India.</p>
+            <div class="input-group search-bar">
+                <input type="text" class="form-control" placeholder="What are you looking for?"
+                    aria-label="Search input">
+                <button class="btn btn-primary" type="button">Search</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="container my-5 py-5">
+        <h2 class="section-title">Popular Categories</h2>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            <div class="col">
+                <div class="card category-card text-center">
+                    <img src="https://placehold.co/400x250/002f34/ffffff?text=Cars" class="card-img-top" alt="Cars">
+                    <div class="card-body">
+                        <h5 class="card-title">Cars</h5>
+                        <p class="card-text text-muted">Explore a wide range of vehicles.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card category-card text-center">
+                    <img src="https://placehold.co/400x250/002f34/ffffff?text=Mobiles" class="card-img-top"
+                        alt="Mobiles">
+                    <div class="card-body">
+                        <h5 class="card-title">Mobiles</h5>
+                        <p class="card-text text-muted">New and used smartphones.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card category-card text-center">
+                    <img src="https://placehold.co/400x250/002f34/ffffff?text=Properties" class="card-img-top"
+                        alt="Properties">
+                    <div class="card-body">
+                        <h5 class="card-title">Properties</h5>
+                        <p class="card-text text-muted">Find your dream home or plot.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card category-card text-center">
+                    <img src="https://placehold.co/400x250/002f34/ffffff?text=Electronics" class="card-img-top"
+                        alt="Electronics">
+                    <div class="card-body">
+                        <h5 class="card-title">Electronics</h5>
+                        <p class="card-text text-muted">Gadgets, appliances, and more.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Listings Section -->
+    <section class="container my-5 py-5">
+        <h2 class="section-title">Featured Listings</h2>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <!-- Listing 1 -->
+            <div class="col">
+                <div class="card listing-card">
+                    <img src="https://placehold.co/600x400/00b0b6/ffffff?text=Vintage+Car" class="card-img-top"
+                        alt="Vintage Car">
+                    <div class="card-body">
+                        <h5 class="card-title">Vintage 1980s Sedan</h5>
+                        <p class="card-text">Well-maintained classic car, perfect for enthusiasts. Low mileage.</p>
+                        <p class="price">₹ 5,00,000</p>
+                        <small class="text-muted">Mumbai, Maharashtra</small>
+                    </div>
+                </div>
+            </div>
+            <!-- Listing 2 -->
+            <div class="col">
+                <div class="card listing-card">
+                    <img src="https://placehold.co/600x400/00b0b6/ffffff?text=Smartphone" class="card-img-top"
+                        alt="Latest Smartphone">
+                    <div class="card-body">
+                        <h5 class="card-title">Latest Model Smartphone (Used)</h5>
+                        <p class="card-text">Almost new, with original box and accessories. Great condition.</p>
+                        <p class="price">₹ 45,000</p>
+                        <small class="text-muted">Delhi, Delhi</small>
+                    </div>
+                </div>
+            </div>
+            <!-- Listing 3 -->
+            <div class="col">
+                <div class="card listing-card">
+                    <img src="https://placehold.co/600x400/00b0b6/ffffff?text=Apartment" class="card-img-top"
+                        alt="2 BHK Apartment">
+                    <div class="card-body">
+                        <h5 class="card-title">Spacious 2 BHK Apartment for Rent</h5>
+                        <p class="card-text">Prime location, fully furnished, near metro station. Available immediately.
+                        </p>
+                        <p class="price">₹ 25,000/month</p>
+                        <small class="text-muted">Bengaluru, Karnataka</small>
+                    </div>
+                </div>
+            </div>
+            <!-- Listing 4 -->
+            <div class="col">
+                <div class="card listing-card">
+                    <img src="https://placehold.co/600x400/00b0b6/ffffff?text=Laptop" class="card-img-top"
+                        alt="Gaming Laptop">
+                    <div class="card-body">
+                        <h5 class="card-title">High-Performance Gaming Laptop</h5>
+                        <p class="card-text">Powerful specs, ideal for gaming and professional work. Barely used.</p>
+                        <p class="price">₹ 80,000</p>
+                        <small class="text-muted">Hyderabad, Telangana</small>
+                    </div>
+                </div>
+            </div>
+            <!-- Listing 5 -->
+            <div class="col">
+                <div class="card listing-card">
+                    <img src="https://placehold.co/600x400/00b0b6/ffffff?text=Motorcycle" class="card-img-top"
+                        alt="Sports Motorcycle">
+                    <div class="card-body">
+                        <h5 class="card-title">Sports Motorcycle - Excellent Condition</h5>
+                        <p class="card-text">Well-maintained, low mileage, thrilling ride. Serviced recently.</p>
+                        <p class="price">₹ 1,80,000</p>
+                        <small class="text-muted">Chennai, Tamil Nadu</small>
+                    </div>
+                </div>
+            </div>
+            <!-- Listing 6 -->
+            <div class="col">
+                <div class="card listing-card">
+                    <img src="https://placehold.co/600x400/00b0b6/ffffff?text=Sofa+Set" class="card-img-top"
+                        alt="Modern Sofa Set">
+                    <div class="card-body">
+                        <h5 class="card-title">Modern 3-Seater Sofa Set</h5>
+                        <p class="card-text">Comfortable and stylish, perfect for living room. Gently used.</p>
+                        <p class="price">₹ 18,000</p>
+                        <small class="text-muted">Kolkata, West Bengal</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="container cta-section">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2>Ready to Sell Something?</h2>
+                <p>Post your ad for FREE and reach millions of potential buyers across India!</p>
+                <a href="#" class="btn">Start Selling Now</a>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- footer -->
+    <footer class="bg-dark text-white mt-5">
+        <div class="container py-4">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5>OLX </h5>
+                    <p>Buy and sell used products at your convenience.</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white text-decoration-none">Home</a></li>
+                        <li><a href="/views/login.html" class="text-white text-decoration-none">Login</a></li>
+                        <li><a href="/views/register.html" class="text-white text-decoration-none">Registration</a></li>
+                        <!-- <li><a href="#" class="text-white text-decoration-none">Contact</a></li> -->
+                        <li><a href="#" class="text-white text-decoration-none">Help & FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Contact Us</h5>
+                    <p><i class="fa-solid fa-envelope me-2"></i> support@olx.com</p>
+                    <p><i class="fa-solid fa-phone me-2"></i> +91 93130 80291</p>
+                    <div>
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="bg-white" />
+            <div class="text-center">
+                &copy; 2025 OLX . All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js"
+        integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK"
+        crossorigin="anonymous"></script>
+    
+    
+
+</body>
+
+</html>

@@ -1,0 +1,243 @@
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .05);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: #002f34 !important;
+            /* OLX primary color */
+        }
+
+        .btn-primary {
+            background-color: #002f34;
+            border-color: #002f34;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #001f22;
+            border-color: #001f22;
+            transform: translateY(-2px);
+        }
+
+        .hero-section {
+            background: linear-gradient(to right, #002f34, #004b50);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            border-bottom-left-radius: 50px;
+            border-bottom-right-radius: 50px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, .1);
+        }
+
+        .hero-section h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .hero-section p {
+            font-size: 1.25rem;
+            margin-bottom: 40px;
+            animation: fadeInUp 1s ease-out;
+            animation-delay: 0.3s;
+            opacity: 0;
+            animation-fill-mode: forwards;
+        }
+
+        .search-bar {
+            max-width: 700px;
+            margin: 0 auto;
+            animation: zoomIn 1s ease-out;
+            animation-delay: 0.6s;
+            opacity: 0;
+            animation-fill-mode: forwards;
+        }
+
+        .search-bar .form-control {
+            border-radius: 50px 0 0 50px;
+            padding: 12px 20px;
+            border: none;
+        }
+
+        .search-bar .btn {
+            border-radius: 0 50px 50px 0;
+            padding: 12px 25px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #002f34;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .category-card,
+        .listing-card {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, .08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: #fff;
+            height: 100%;
+            /* Ensure cards in a row have same height */
+        }
+
+        .category-card:hover,
+        .listing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .12);
+        }
+
+        .category-card img {
+            height: 150px;
+            object-fit: cover;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        .listing-card img {
+            height: 200px;
+            object-fit: cover;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        .listing-card .card-body {
+            padding: 15px;
+        }
+
+        .listing-card .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #002f34;
+            margin-bottom: 10px;
+        }
+
+        .listing-card .card-text {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .listing-card .price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #00b0b6;
+            /* OLX secondary color */
+        }
+
+        .cta-section {
+            background-color: #00b0b6;
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            border-radius: 20px;
+            margin-top: 60px;
+            margin-bottom: 60px;
+            animation: slideInUp 1s ease-out;
+            animation-delay: 0.9s;
+            opacity: 0;
+            animation-fill-mode: forwards;
+        }
+
+        .cta-section h2 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .cta-section .btn {
+            background-color: #fff;
+            color: #00b0b6;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+        }
+
+        .cta-section .btn:hover {
+            background-color: #f0f0f0;
+            color: #008c90;
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            background-color: #002f34;
+            color: white;
+            padding: 40px 0;
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: #00b0b6;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
