@@ -11,7 +11,17 @@ $(document).ready(function () {
       return;
     }
 
-    products.forEach(product => {
+    // const products = JSON.parse(localStorage.getItem("products")) || [];
+
+    // 🧹 Hide ordered ones
+    // const visibleProducts = products.filter(p => p.status !== "ordered");
+
+    const visibleProducts = products.filter(p => p.status !== "accepted");
+
+
+    console.log(visibleProducts)
+
+    visibleProducts.forEach(product => {
       const card = `
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
     <div class="card card-product h-100">

@@ -1,3 +1,4 @@
+
 $(document).ready(function () {
   const currentUser = JSON.parse(localStorage.getItem('loggedInUser'));
 
@@ -7,7 +8,7 @@ $(document).ready(function () {
     return;
   }
 
-  // Utility Functions
+  // Utilities
   const generateProductId = () => 'PID' + Date.now();
   const loadProducts = () => JSON.parse(localStorage.getItem('products')) || [];
   const saveProducts = (products) => localStorage.setItem('products', JSON.stringify(products));
@@ -19,18 +20,20 @@ $(document).ready(function () {
     reader.readAsDataURL(file);
   };
 
-  // Check if any buyer has chatted for a given product
+  // ✅ Detect if any buyer has chatted for this product
   const hasBuyerChats = (productId, sellerId) => {
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key.startsWith(`chat_${productId}_`) && key.endsWith(`_${sellerId}`)) {
-        const messages = JSON.parse(localStorage.getItem(key));
+    const keys = Object.keys(localStorage);
+    console.log(keys)
+    for (let key of keys) {
+      if (key.startsWith("chat_") && key.includes(sellerId) && key.includes(productId)) {
+        const messages = JSON.parse(localStorage.getItem(chats));
+        // console.log("messages" +messages)
         if (Array.isArray(messages) && messages.length > 0) {
           return true;
         }
       }
     }
-    return false;
+    return true;
   };
 
   // Reset form
@@ -41,7 +44,7 @@ $(document).ready(function () {
     $('#image').val('');
   };
 
-  // Display seller's products
+  // ✅ Render all products of the current seller
   const displaySellerProducts = () => {
     const products = loadProducts();
     const sellerProducts = products.filter(p => p.seller_id === currentUser.user_id);
@@ -54,15 +57,7 @@ $(document).ready(function () {
     }
 
     sellerProducts.forEach(product => {
-      const chatButtonHtml = hasBuyerChats(product.id, product.seller_id)
-        ? `
-          <a href="/views/chat.html?product_id=${product.id}">
-            <button class="btn btn-sm btn-success w-100 w-md-auto chatBtn"
-              data-product-id="${product.id}" data-seller-id="${product.seller_id}">
-              <i class="fa fa-comments me-1"></i> Chat with Buyer
-            </button>
-          </a>`
-        : '';
+      const showChatBtn = hasBuyerChats(product.id, product.seller_id);
 
       const card = `
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
@@ -79,7 +74,11 @@ $(document).ready(function () {
               </p>
               <button class="btn btn-sm btn-warning edit-btn w-100 mb-2" data-id="${product.id}">Edit</button>
               <button class="btn btn-sm btn-danger delete-btn w-100 mb-2" data-id="${product.id}">Delete</button>
-              ${chatButtonHtml}
+              ${showChatBtn ? `
+                <button class="btn btn-sm btn-success w-100 chatBtn"
+                  data-product-id="${product.id}" data-seller-id="${product.seller_id}">
+                  <i class="fa fa-comments me-1"></i> Chat with Buyer
+                </button>` : ''}
             </div>
           </div>
         </div>
@@ -89,26 +88,26 @@ $(document).ready(function () {
     });
   };
 
-  // Handle chat button click
+  // Handle "Chat with Buyer" button
   $(document).on('click', '.chatBtn', function () {
     const productId = $(this).data('product-id');
     const sellerId = $(this).data('seller-id');
     localStorage.setItem("chatProductId", productId);
     localStorage.setItem("chatSellerId", sellerId);
+    window.location.href = "/views/chat.html";
   });
 
-  // Submit add/update product form
+  // Submit add/edit form
   $('#productForm').submit(function (e) {
     e.preventDefault();
-
     const id = $('#editingProductId').val() || generateProductId();
     const products = loadProducts();
     const imageFile = $('#image')[0].files[0];
 
     let existingImage = '';
-    const existingIndex = products.findIndex(p => p.id === id);
-    if (existingIndex !== -1) {
-      existingImage = products[existingIndex].image;
+    const index = products.findIndex(p => p.id === id);
+    if (index !== -1) {
+      existingImage = products[index].image;
     }
 
     const saveProduct = (base64Image) => {
@@ -125,12 +124,12 @@ $(document).ready(function () {
         image: base64Image
       };
 
-      if (existingIndex !== -1) {
-        products[existingIndex] = productData;
-        alert('Product updated successfully!');
+      if (index !== -1) {
+        products[index] = productData;
+        alert("Product updated successfully!");
       } else {
         products.push(productData);
-        alert('Product added successfully!');
+        alert("Product added successfully!");
       }
 
       saveProducts(products);
@@ -160,7 +159,6 @@ $(document).ready(function () {
       $('#state').val(product.state);
       $('#description').val(product.description);
       $('#submitBtn').text('Update Product');
-
       const modal = new bootstrap.Modal(document.getElementById('addProductModal'));
       modal.show();
     }
@@ -169,7 +167,7 @@ $(document).ready(function () {
   // Delete Product
   $(document).on('click', '.delete-btn', function () {
     const productId = $(this).data('id');
-    if (confirm('Are you sure you want to delete this product?')) {
+    if (confirm("Are you sure you want to delete this product?")) {
       let products = loadProducts();
       products = products.filter(p => p.id !== productId);
       saveProducts(products);
@@ -177,6 +175,7 @@ $(document).ready(function () {
     }
   });
 
-  // Initial display
+  // Initial render
   displaySellerProducts();
 });
+

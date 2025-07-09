@@ -1,89 +1,45 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>Chat</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <style>
-    #chatBox { height: 400px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; }
-    .sent { text-align: right; color: blue; }
-    .received { text-align: left; color: green; }
-    .sent {
-  text-align: right;
-  color: blue;
-  /* background-color: #e0f0ff; */
-  padding: 8px;
-  border-radius: 10px;
-  margin-left: auto;
-  max-width: 70%;
-}
-.received {
-  text-align: left;
-  color: green;
-  /* background-color: #e8ffe8; */
-  padding: 8px;
-  border-radius: 10px;
-  margin-right: auto;
-  max-width: 70%;
-}
-#chatBox .text-muted {
-  display: block;
-  font-size: 0.75rem;
-  margin-top: 2px;
-}
+<html lang="en">
 
+<head>
+  <meta charset="UTF-8">
+  <title>Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    #chatBox {
+      height: 350px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 10px;
+      background-color: #f8f9fa;
+    }
   </style>
 </head>
-<body class="p-4">
-  <div class="container">
-    <h4>Chat</h4>
-    
-    <div id="chatBox" class="mb-3 bg-light rounded"></div>
-    
+
+<body class="bg-light">
+  <div class="container py-4">
+    <h4 id="chatTitle" class="mb-3">Chat</h4>
+    <div class="text-end mt-3">
+      <a href="order.html" class="btn btn-success text-end mb-3" id="goToOrder">Place Order</a>
+    </div>
+
+    <!-- Seller dropdown -->
+    <div class="mb-3" id="buyerSelectContainer" style="display: none;">
+      <label class="form-label">Select Buyer</label>
+      <select id="buyerDropdown" class="form-select"></select>
+    </div>
+
+    <div id="chatBox" class="rounded shadow-sm mb-3"></div>
+
     <div class="input-group">
-      <input type="text" id="msgInput" class="form-control" placeholder="Type your message">
-      <button id="sendBtn" class="btn btn-primary">Send</button>
+      <input type="text" id="messageInput" class="form-control" placeholder="Type a message">
+      <button class="btn btn-primary" id="sendBtn">Send</button>
     </div>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="/controllers/chatController.js"></script>
-  <script>
-    const user = getCurrentUser();
-    const productId = localStorage.getItem('chatProductId');
-    const sellerId = localStorage.getItem('chatSellerId');
-    const isBuyer = user.role === 'buyer';
-    const buyerId = isBuyer ? user.user_id : localStorage.getItem('chatWithBuyerId');
-
-    if (!buyerId && !isBuyer) {
-      const inputBuyerId = prompt("Enter Buyer ID to simulate seller chat:");
-      localStorage.setItem('chatWithBuyerId', inputBuyerId);
-    }
-
-    const finalBuyerId = isBuyer ? user.user_id : localStorage.getItem('chatWithBuyerId');
-    const chatKey = `chat_${productId}_${finalBuyerId}_${sellerId}`;
-    let messages = JSON.parse(localStorage.getItem(chatKey)) || [];
-
-    function renderChats() {
-      $('#chatBox').html('');
-      messages.forEach(msg => {
-        const className = msg.sender === user.user_id ? 'sent' : 'received';
-        $('#chatBox').append(`<div class="${className}">${msg.message}</div>`);
-      });
-    }
-
-    $('#sendBtn').click(function() {
-      const text = $('#msgInput').val().trim();
-      if (!text) return;
-      messages.push({ sender: user.user_id, message: text, timestamp: Date.now() });
-      localStorage.setItem(chatKey, JSON.stringify(messages));
-      $('#msgInput').val('');
-      renderChats();
-    });
-
-    setInterval(() => {
-      messages = JSON.parse(localStorage.getItem(chatKey)) || [];
-      renderChats();
-    }, 1000);
-  </script>
+  <script src="/controllers/chatController.js">  </script>
 </body>
+
 </html>

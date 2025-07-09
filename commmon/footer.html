@@ -101,15 +101,6 @@
         $(".add-product-only").hide();
       }
 
-      // Reinitialize Bootstrap accordion after dynamic load
-      if (typeof bootstrap !== 'undefined') {
-        const accordionElement = document.querySelector('#footerAccordionUnique');
-        if (accordionElement) {
-          new bootstrap.Collapse(accordionElement, {
-            toggle: false
-          });
-        }
-      }
     });
   </script>
 

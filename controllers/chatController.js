@@ -1,117 +1,99 @@
-// /js/common.js - with seller chat dropdown optimization
-function getCurrentUser() {
-  return JSON.parse(localStorage.getItem("loggedInUser"));
+const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+const productId = localStorage.getItem("chatProductId");
+const sellerId = localStorage.getItem("chatSellerId");
+const products = JSON.parse(localStorage.getItem("products")) || [];
+const users = JSON.parse(localStorage.getItem("users")) || [];
+let chats = JSON.parse(localStorage.getItem("chats")) || {};
+let currentBuyerId = null;
+
+const product = products.find(p => p.id === productId);
+if (!product || !loggedInUser) {
+  alert("Invalid session or product.");
+  location.href = "/index.html";
 }
 
-function getUsers() {
-  return JSON.parse(localStorage.getItem("users")) || [];
-}
+const isSeller = loggedInUser.user_id === sellerId;
 
-function getProducts() {
-  return JSON.parse(localStorage.getItem("products")) || [];
-}
+const getChatId = (buyerId, sellerId, productId) => {
+  return `chat_${buyerId}_${sellerId}_${productId}`;
+};
 
-$(document).ready(function () {
-  const user = getCurrentUser();
-  if (!user) {
-    alert("Login required");
-    window.location.href = "login.html";
-    return;
-  }
+function renderChat(chatId) {
+  const chatBox = $("#chatBox");
+  chatBox.empty();
+  const chat = chats[chatId] || [];
 
-  const productId = localStorage.getItem("chatProductId");
-  const sellerId = localStorage.getItem("chatSellerId");
-  const allUsers = getUsers();
-
-  let buyerId = null;
-  let chatKey = "";
-  let messages = [];
-
-  // Create dropdown if seller
-  if (user.role === "seller") {
-    // Scan all localStorage keys for chat keys relevant to this seller and product
-    const buyers = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key.startsWith(`chat_${productId}_`) && key.endsWith(`_${sellerId}`)) {
-        const parts = key.split("_");
-        const bId = parts[2];
-        const buyer = allUsers.find(u => u.user_id === bId);
-        if (buyer && !buyers.find(b => b.user_id === buyer.user_id)) {
-          buyers.push(buyer);
-        }
-      }
-    }
-
-    if (buyers.length > 0) {
-      const dropdownHtml = `
-        <div class="mb-3">
-          <label class="form-label">Select Buyer</label>
-          <select id="buyerDropdown" class="form-select">
-            <option value="">-- Select Buyer --</option>
-            ${buyers.map(b => `<option value="${b.user_id}">${b.name}</option>`).join("")}
-          </select>
-        </div>`;
-      $("#chatBox").before(dropdownHtml);
-    }
-
-    // Load chat after selecting a buyer
-    $(document).on("change", "#buyerDropdown", function () {
-      buyerId = $(this).val();
-      if (!buyerId) return;
-
-      localStorage.setItem("chatWithBuyerId", buyerId);
-      chatKey = `chat_${productId}_${buyerId}_${sellerId}`;
-      messages = JSON.parse(localStorage.getItem(chatKey)) || [];
-      renderChats();
-    });
-  } else {
-    // For buyers
-    buyerId = user.user_id;
-    chatKey = `chat_${productId}_${buyerId}_${sellerId}`;
-    messages = JSON.parse(localStorage.getItem(chatKey)) || [];
-    renderChats();
-  }
-
-  function renderChats() {
-    const allUsers = getUsers();
-    $("#chatBox").html("");
-
-    messages.forEach(msg => {
-      const className = msg.sender === user.user_id ? "sent" : "received";
-      const sender = allUsers.find(u => u.user_id === msg.sender);
-      const senderName = sender ? sender.name : "Unknown";
-
-      $("#chatBox").append(`
-      <div class="${className} mb-2">
-        <div>${msg.message}</div>
-        <small class="text-muted">${senderName}</small>
-      </div>
-    `);
-    });
-  }
-
-
-  $("#sendBtn").click(function () {
-    const text = $("#msgInput").val().trim();
-    if (!text || (!buyerId && user.role === "seller")) return;
-
-    const msg = {
-      sender: user.user_id,
-      message: text,
-      timestamp: new Date().toLocaleTimeString()
-    };
-
-    messages.push(msg);
-    localStorage.setItem(chatKey, JSON.stringify(messages));
-    $("#msgInput").val("");
-    renderChats();
+  chat.forEach(msg => {
+    const align = msg.senderId === loggedInUser.user_id ? 'text-end' : 'text-start';
+    const color = msg.senderId === loggedInUser.user_id ? 'primary' : 'secondary';
+    chatBox.append(`<div class="${align} mb-2"><span class="badge bg-${color}">${msg.text}</span></div>`);
   });
 
-  setInterval(() => {
-    if (chatKey) {
-      messages = JSON.parse(localStorage.getItem(chatKey)) || [];
-      renderChats();
+  chatBox.scrollTop(chatBox[0].scrollHeight);
+}
+
+function initBuyerDropdown() {
+  $("#buyerSelectContainer").show();
+  const relatedChatIds = Object.keys(chats).filter(id => id.includes(`_${loggedInUser.user_id}_${productId}`));
+  const buyerIds = [...new Set(relatedChatIds.map(id => id.split("_")[1]))];
+
+  $("#buyerDropdown").html(`<option value="">Select Buyer</option>`);
+  buyerIds.forEach(bid => {
+    const buyer = users.find(u => u.user_id === bid);
+    if (buyer) {
+      $("#buyerDropdown").append(`<option value="${buyer.user_id}">${buyer.name}</option>`);
     }
-  }, 1000);
+  });
+
+  $("#buyerDropdown").on("change", function () {
+    currentBuyerId = $(this).val();
+    if (currentBuyerId) {
+      const chatId = getChatId(currentBuyerId, loggedInUser.user_id, productId);
+      renderChat(chatId);
+    }
+  });
+}
+
+function initChat() {
+  if (isSeller) {
+    $("#chatTitle").text(`Chat with Buyers for "${product.name}"`);
+    initBuyerDropdown();
+  } else {
+    $("#chatTitle").text(`Chat with Seller: ${product.seller_name}`);
+    currentBuyerId = loggedInUser.user_id;
+    renderChat(getChatId(currentBuyerId, sellerId, productId));
+  }
+}
+
+$("#sendBtn").click(() => {
+  const msg = $("#messageInput").val().trim();
+  if (!msg) return;
+
+  const chatId = isSeller
+    ? getChatId(currentBuyerId, loggedInUser.user_id, productId)
+    : getChatId(loggedInUser.user_id, sellerId, productId);
+
+  if (!chats[chatId]) chats[chatId] = [];
+  chats[chatId].push({
+    senderId: loggedInUser.user_id,
+    text: msg,
+    time: Date.now()
+  });
+
+  localStorage.setItem("chats", JSON.stringify(chats));
+  $("#messageInput").val('');
+  renderChat(chatId);
+  
 });
+
+// Real-time update
+setInterval(() => {
+  chats = JSON.parse(localStorage.getItem("chats")) || {};
+  if (isSeller && currentBuyerId) {
+    renderChat(getChatId(currentBuyerId, loggedInUser.user_id, productId));
+  } else if (!isSeller) {
+    renderChat(getChatId(loggedInUser.user_id, sellerId, productId));
+  }
+}, 1000);
+
+initChat();

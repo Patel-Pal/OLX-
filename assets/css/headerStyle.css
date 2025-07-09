@@ -1,0 +1,63 @@
+
+  /* Offcanvas menu from left */
+  .offcanvas-start {
+    width: 280px;
+  }
+
+  /* Profile popup styling */
+  #profilePopup {
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Profile icon visibility on mobile */
+  #profileDropdown {
+    display: flex;
+    align-items: center;
+  }
+
+  .navbar .navbar-brand {
+  margin-left: 0.25rem;
+}
+
+  /* Responsive adjustments */
+  @media (max-width: 991.98px) {
+    .navbar-nav {
+      padding: 1rem;
+    }
+
+    .nav-item {
+      margin-bottom: 0.5rem;
+    }
+
+    .nav-link {
+      font-size: 1.1rem;
+    }
+  }
+
+  @media (max-width: 767.98px) {
+    #profilePopup {
+      left: 0 !important;
+      right: auto;
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+
+  /* Brand font size */
+  .navbar-brand {
+    font-size: 1.5rem;
+  }
+
+  /* Profile icon alignment */
+  #profileIcon i {
+    color: #333;
+  }
+
+  #profileIcon:hover i {
+    color: #007bff;
+  }
+
+  
+
