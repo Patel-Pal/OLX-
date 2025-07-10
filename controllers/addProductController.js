@@ -21,20 +21,27 @@ $(document).ready(function () {
   };
 
   // ✅ Detect if any buyer has chatted for this product
-  const hasBuyerChats = (productId, sellerId) => {
-    const keys = Object.keys(localStorage);
-    console.log(keys)
-    for (let key of keys) {
-      if (key.startsWith("chat_") && key.includes(sellerId) && key.includes(productId)) {
-        const messages = JSON.parse(localStorage.getItem(chats));
-        // console.log("messages" +messages)
-        if (Array.isArray(messages) && messages.length > 0) {
-          return true;
-        }
+const hasBuyerChats = (productId, sellerId) => {
+  const chatData = JSON.parse(localStorage.getItem("chats")) || {};
+
+  for (let chatKey in chatData) {
+    if (
+      chatKey.startsWith("chat_") &&
+      chatKey.includes(`_${sellerId}`) &&
+      chatKey.includes(`_${productId}`)
+    ) {
+      const messages = chatData[chatKey];
+
+      if (Array.isArray(messages) && messages.length > 0) {
+        return true;
       }
     }
-    return true;
-  };
+  }
+
+  return false;
+};
+
+
 
   // Reset form
   const resetForm = () => {
