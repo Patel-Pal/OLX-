@@ -62,14 +62,18 @@ $(document).ready(function () {
     sellerProducts.forEach(product => {
       const showChatBtn = hasBuyerChats(product.id, product.seller_id);
 
-      const order = orders[product.id];
+      const orders = JSON.parse(localStorage.getItem("orders")) || [];
+      const order = orders.find(o => o.productId === product.id && o.sellerId === currentUser.user_id && o.status === "pending");
       let orderActionBtns = '';
-      if (order && order.status === "pending" && order.sellerId === currentUser.user_id) {
+      if (order) {
         orderActionBtns = `
-          <button class="btn btn-sm btn-success w-100 mb-2 accept-order-btn" data-id="${product.id}">Accept Order</button>
-          <button class="btn btn-sm btn-danger w-100 mb-2 reject-order-btn" data-id="${product.id}">Reject Order</button>
+          <div class="d-flex gap-2">
+    <button class="btn btn-sm btn-success w-50 accept-order-btn" data-id="${order.orderId}">Accept Order</button>
+    <button class="btn btn-sm btn-danger w-50 reject-order-btn" data-id="${order.orderId}">Reject Order</button>
+  </div>
         `;
       }
+
 
       const card = `
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
@@ -87,7 +91,7 @@ $(document).ready(function () {
               <button class="btn btn-sm btn-warning edit-btn w-100 mb-2" data-id="${product.id}">Edit</button>
               <button class="btn btn-sm btn-danger delete-btn w-100 mb-2" data-id="${product.id}">Delete</button>
               ${showChatBtn ? `
-                <button class="btn btn-sm btn-success w-100 chatBtn mb-2"
+                <button class="btn btn-sm btn-secondary w-100 chatBtn mb-2"
                   data-product-id="${product.id}" data-seller-id="${product.seller_id}">
                   <i class="fa fa-comments me-1"></i> Chat with Buyer
                 </button>` : ''}
@@ -104,41 +108,62 @@ $(document).ready(function () {
 
   // ✅ Accept order
   $(document).on('click', '.accept-order-btn', function () {
-    const productId = $(this).data('id');
-    const orders = JSON.parse(localStorage.getItem("orders")) || {};
-    const products = loadProducts();
+    const orderId = $(this).data('id');
+    const orders = JSON.parse(localStorage.getItem("orders")) || [];
+    const products = loadProducts(); // Your function to load all products
 
-    if (orders[productId]) {
-      orders[productId].status = "accepted";
+    const index = orders.findIndex(o => o.orderId === orderId);
+    if (index !== -1) {
+      const productId = orders[index].productId;
 
+      // Update order and product status
+      orders[index].status = "accepted";
       const updatedProducts = products.map(p => {
         if (p.id === productId) {
-          return { ...p, status: "ordered" }; // Hide from public
+          return { ...p, status: "ordered" }; // Optional: mark as ordered
         }
         return p;
       });
 
+      // Save changes
       localStorage.setItem("orders", JSON.stringify(orders));
       saveProducts(updatedProducts);
 
       alert("Order accepted!");
-      displaySellerProducts();
+
+      localStorage.removeItem("currentOrderProductId");
+
+
+      // ✅ Re-render
+      displaySellerProducts?.(); // If showing pending orders list
+      renderHistory?.("accepted"); // Show updated list in history panel
     }
   });
+
+
 
   // ✅ Reject order
   $(document).on('click', '.reject-order-btn', function () {
-    const productId = $(this).data('id');
-    const orders = JSON.parse(localStorage.getItem("orders")) || {};
+    const orderId = $(this).data('id');
+    const orders = JSON.parse(localStorage.getItem("orders")) || [];
 
-    if (orders[productId]) {
-      orders[productId].status = "rejected";
+    const index = orders.findIndex(o => o.orderId === orderId);
+    if (index !== -1) {
+      orders[index].status = "rejected";
       localStorage.setItem("orders", JSON.stringify(orders));
 
       alert("Order rejected!");
-      displaySellerProducts();
+
+      localStorage.removeItem("currentOrderProductId");
+
+
+      // ✅ Re-render
+      displaySellerProducts?.();
+      renderHistory?.("rejected");
     }
   });
+
+
 
   // Handle "Chat with Buyer" button
   $(document).on('click', '.chatBtn', function () {

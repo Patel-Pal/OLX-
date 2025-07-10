@@ -2,22 +2,47 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <title>orderpage</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Page</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 
 <body>
-    <div class="container py-5">
-      <h3 class="text-center mb-2">Your Order</h3>
-    </div>
-    <div class="container my-4">
-        <div id="orderDetails" class="card p-4"></div>
-    </div>
+  <div id="header" class="sticky-top"></div>
+  <div class="container py-4">
+    <h3 class="text-center mb-4">Your Order</h3>
+    <div id="orderDetails" class="card p-4 mb-4 shadow-sm"></div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="/controllers/orderController.js"></script>
+    <div id="historyBtnWrapper" class="text-end d-none">
+      <button class="btn btn-dark" data-bs-toggle="offcanvas" data-bs-target="#orderHistoryCanvas">
+        View Order History
+      </button>
+    </div>
+  </div>
+
+  <!-- Order History Sidebar -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="orderHistoryCanvas">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title">Order History</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+      <ul class="nav nav-tabs mb-3" id="historyTabs">
+        <li class="nav-item"><button class="nav-link active" data-status="pending">Pending</button></li>
+        <li class="nav-item"><button class="nav-link" data-status="accepted">Accepted</button></li>
+        <li class="nav-item"><button class="nav-link" data-status="rejected">Rejected</button></li>
+      </ul>
+      <div id="historyList" class="row gy-3"></div>
+    </div>
+  </div>
+  <div id="footer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/controllers/orderController.js"></script>
+  <script src="/commmon/script.js"></script>
+  
 </body>
+
 </html>

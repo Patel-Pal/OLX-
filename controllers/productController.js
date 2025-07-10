@@ -1,6 +1,6 @@
 $(document).ready(function () {
   const allProducts = JSON.parse(localStorage.getItem('products')) || [];
-  const orders = JSON.parse(localStorage.getItem("orders")) || {};
+  const orders = JSON.parse(localStorage.getItem("orders")) || [];
 
   // Render Product Cards
   function renderProducts(products) {
@@ -12,14 +12,10 @@ $(document).ready(function () {
       return;
     }
 
-
-
-    // const visibleProducts = products.filter(p => p.status !== "accepted");
     const visibleProducts = products.filter(product => {
-      const order = orders[product.id];
-      // If the product is ordered AND accepted, we skip it
-      return !(order && order.status === "accepted");
-    });
+  const productOrder = orders.find(o => o.productId === product.id && o.status === "accepted");
+  return !productOrder; // Exclude accepted orders
+});
 
 
 
