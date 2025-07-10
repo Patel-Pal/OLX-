@@ -97,3 +97,21 @@ setInterval(() => {
 }, 1000);
 
 initChat();
+
+$("#goToOrder").click( function () {
+  
+
+  if (!productId) {
+    console.error("❌ productId is undefined!", this);
+    alert("Product ID missing. Cannot proceed.");
+    return;
+  }
+
+  // ✅ Save to localStorage
+  localStorage.setItem("currentOrderProductId", productId);
+
+  // ✅ Redirect to order page
+  window.location.href = "/views/order.html";
+});
+
+

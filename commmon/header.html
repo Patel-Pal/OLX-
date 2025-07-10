@@ -36,7 +36,7 @@
             <a class="nav-link" id="logoutBtn" href="#">Logout</a>
           </li>
           <li class="nav-item">
-            <!-- <a class="nav-link" id="dispname" href="#"></a> -->
+            <a class="nav-link" id="dispname" href="#"></a>
           </li> 
         </ul>
       </div>
@@ -48,7 +48,7 @@
   <script>
     $(document).ready(function () {
       const user = JSON.parse(localStorage.getItem("loggedInUser"));
-      $("#dispname").html(user.name)
+      $("#dispname").html("<strong>"+user.name.toUpperCase()+"</strong>")
       console.log(user.name)
       if (!user || user.role !== 'seller') {
         $(".add-product-only").hide();

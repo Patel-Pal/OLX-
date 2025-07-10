@@ -1,5 +1,6 @@
 $(document).ready(function () {
   const allProducts = JSON.parse(localStorage.getItem('products')) || [];
+  const orders = JSON.parse(localStorage.getItem("orders")) || {};
 
   // Render Product Cards
   function renderProducts(products) {
@@ -11,12 +12,15 @@ $(document).ready(function () {
       return;
     }
 
-    // const products = JSON.parse(localStorage.getItem("products")) || [];
 
-    // 🧹 Hide ordered ones
-    // const visibleProducts = products.filter(p => p.status !== "ordered");
 
-    const visibleProducts = products.filter(p => p.status !== "accepted");
+    // const visibleProducts = products.filter(p => p.status !== "accepted");
+    const visibleProducts = products.filter(product => {
+      const order = orders[product.id];
+      // If the product is ordered AND accepted, we skip it
+      return !(order && order.status === "accepted");
+    });
+
 
 
     console.log(visibleProducts)
@@ -24,21 +28,21 @@ $(document).ready(function () {
     visibleProducts.forEach(product => {
       const card = `
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-    <div class="card card-product h-100">
-      <img src="${product.image}" 
-          class="card-img-top product-img" 
-          alt="${product.name}" 
-          style="height: 180px; object-fit: cover; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
-          
-      <div class="card-body">
-        <h6 class="card-title text-truncate">${product.name}</h6>
-        <p><strong>Price:</strong> ₹${product.price}</p>
-        <p><strong>Category:</strong> ${product.category}</p>
-        <p><strong>Seller:</strong> ${product.seller_name}</p>
-        <a href="/views/productDetail.html?id=${product.id}" class="btn btn-sm btn-outline-dark mt-2 w-100">View Detail</a>
+          <div class="card card-product h-100">
+            <img src="${product.image}" 
+                class="card-img-top product-img" 
+                alt="${product.name}" 
+                style="height: 180px; object-fit: cover; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+                
+            <div class="card-body">
+              <h6 class="card-title text-truncate">${product.name}</h6>
+              <p><strong>Price:</strong> ₹${product.price}</p>
+              <p><strong>Category:</strong> ${product.category}</p>
+              <p><strong>Seller:</strong> ${product.seller_name}</p>
+              <a href="/views/productDetail.html?id=${product.id}" class="btn btn-sm btn-outline-dark mt-2 w-100">View Detail</a>
+            </div>
+          </div>
       </div>
-    </div>
-  </div>
 
       `;
       container.append(card);
@@ -101,10 +105,19 @@ $(document).ready(function () {
   });
 
   // Filter form submit
-  $('#filterForm').on('submit', function (e) {
-    e.preventDefault();
-    applyFilters();
-    const offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('filterOffcanvas'));
-    if (offcanvas) offcanvas.hide();
-  });
+ $('#filterForm').on('submit', function (e) {
+  e.preventDefault();
+  applyFilters();
+
+  const offcanvasEl = document.getElementById('filterOffcanvas');
+  const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
+  if (offcanvas) offcanvas.hide();
+
+  // Fix lingering backdrop
+  setTimeout(() => {
+    $('.offcanvas-backdrop').remove(); // Remove backdrop
+    $('body').removeClass('offcanvas-backdrop'); // Remove class if added
+  }, 300); // wait until animation completes
+});
+
 });
