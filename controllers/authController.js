@@ -12,11 +12,29 @@ $(document).ready(function () {
     const password = $('#password').val().trim();
     const role = $('#role').val();
 
+    // Validation
+    if (name.length < 3) {
+      alert('Name must be at least 3 characters long.');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+
+    if (password.length < 6) {
+      alert('Password must be at least 6 characters long.');
+      return;
+    }
+
     if (!role) {
       alert('Please select a role.');
       return;
     }
 
+    // Check if user already exists
     let users = loadUsers();
 
     if (users.find(user => user.email === email)) {
@@ -24,6 +42,7 @@ $(document).ready(function () {
       return;
     }
 
+    // Create and save user
     const newUser = {
       user_id: generateUserId(),
       name,
@@ -62,7 +81,7 @@ $(document).ready(function () {
     }
   });
 
-    // === Logout Handler ===
+  // === Logout Handler ===
   $('#logoutBtn').on('click', function () {
     localStorage.removeItem('loggedInUser');
     alert('You have been logged out!');
