@@ -5,12 +5,17 @@ $(document).ready(function () {
   const products = JSON.parse(localStorage.getItem('products')) || [];
   const product = products.find(p => p.id === productId);
 
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+
+
   const container = $('#productDetail');
 
   if (!product) {
     container.html(`<div class="text-center text-danger">Product not found!</div>`);
     return;
   }
+
+  const showChatBtn = loggedInUser && loggedInUser.user_id !== product.seller_id;
 
   const detailHTML = `
     <div class="container py-4">
@@ -34,11 +39,13 @@ $(document).ready(function () {
             <div class="mb-2"><strong>Location:</strong> ${product.city}, ${product.state}</div>
             <div class="mb-3"><strong>Seller:</strong> <span class="text-primary fw-semibold">${product.seller_name}</span></div>
 
+             ${showChatBtn ? `
             <a href="/views/chat.html?product_id=${product.id}">
               <button class="btn btn-success w-100 w-md-auto" id="chatBtn">
                 <i class="fa fa-comments me-1"></i> Chat with ${product.seller_name}
               </button>
             </a>
+          ` : ''}
           </div>
         </div>
       </div>
@@ -48,23 +55,41 @@ $(document).ready(function () {
   container.html(detailHTML);
 
   //  Chat Button Logic
-  $("#chatBtn").click(function (e) {
-    e.preventDefault();
+  // $("#chatBtn").click(function (e) {
+  //   e.preventDefault();
 
-    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+  //   const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
 
-    if (!loggedInUser) {
-      showToast("Please log in to start chatting with the seller.", "warning");
-      return;
-    }
+  //   if (!loggedInUser) {
+  //     showToast("Please log in to start chatting with the seller.", "warning");
+  //     return;
+  //   }
 
-    if (loggedInUser.user_id === product.seller_id) {
-      showToast("You cannot chat with yourself.", "danger");
-      return;
-    }
+  //   if (loggedInUser.user_id === product.seller_id) {
+  //     showToast("You cannot chat with yourself.", "danger");
+  //     return;
+  //   }
 
-    localStorage.setItem("chatProductId", product.id);
-    localStorage.setItem("chatSellerId", product.seller_id);
-    window.location.href = "chat.html";
-  });
+  //   localStorage.setItem("chatProductId", product.id);
+  //   localStorage.setItem("chatSellerId", product.seller_id);
+  //   window.location.href = "chat.html";
+  // });
+
+  $(document).on("click", "#chatBtn", function (e) {
+  e.preventDefault();
+
+  if (!loggedInUser) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Login Required',
+      text: 'Please log in to start chatting with the seller.'
+    });
+    return;
+  }
+
+  localStorage.setItem("chatProductId", product.id);
+  localStorage.setItem("chatSellerId", product.seller_id);
+  window.location.href = "chat.html";
+});
+
 });

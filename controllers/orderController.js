@@ -63,9 +63,13 @@ $(document).ready(function () {
           </div>
         `;
       }
-    } else if (currentUser.role === "buyer") {
-      orderHTML += `<button id="placeOrder" class="btn btn-primary mt-3">Place Order</button>`;
-    }
+    }  else if (
+  (currentUser.role === "buyer") || 
+  (currentUser.role === "seller" && currentUser.user_id !== product.seller_id)
+) {
+  orderHTML += `<button id="placeOrder" class="btn btn-success mt-3">Click for order Request</button>`;
+}
+
 
     orderHTML += `</div></div>`;
     $("#orderDetails").html(orderHTML);
@@ -136,17 +140,19 @@ function updateOrderStatus(orderId, status) {
 
     const historyOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(document.getElementById('orderHistoryCanvas'));
     if (!document.getElementById('orderHistoryCanvas').classList.contains('show')) {
-      historyOffcanvas.show();
+      historyOffcanvas.show(); 
     }
   }
 }
 
 // ✅ Render order history
-function renderHistory(status) {
+function renderHistory(status) { 
   const allOrders = JSON.parse(localStorage.getItem("orders")) || [];
   const filtered = allOrders.filter(o =>
     (currentUser.role === "seller" && o.sellerId === currentUser.user_id && o.status === status) ||
-    (currentUser.role === "buyer" && o.buyerId === currentUser.user_id && o.status === status)
+    (o.buyerId === currentUser.user_id && o.status === status)
+
+    // (currentUser.role === "buyer" && o.buyerId === currentUser.user_id && o.status === status)
   );
 
   const container = $("#historyList");
@@ -191,6 +197,10 @@ function renderHistory(status) {
     container.append(card);
   });
 }
+
+
+
+
 
 // ✅ Tab switch handler
 $("#historyTabs .nav-link").on("click", function () {

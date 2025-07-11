@@ -56,28 +56,67 @@ function renderSellerOrders() {
 
 
 // Accept order
+// $(document).on("click", ".accept-order-btn", function () {
+//   const orderId = $(this).data("id");
+//   const orders = JSON.parse(localStorage.getItem("orders")) || [];
+//   const index = orders.findIndex(o => o.orderId === orderId);
+//   if (index !== -1) {
+//     orders[index].status = "accepted";
+//     localStorage.setItem("orders", JSON.stringify(orders));
+
+//     Swal.fire({
+//       icon: 'success',
+//       title: 'Order Accepted',
+//       text: 'The order has been accepted successfully!',
+//       showConfirmButton: false,
+//       timer: 1500
+//     });
+
+//     renderSellerOrders();
+//     setTimeout(() => location.reload(), 1600);
+
+//     localStorage.removeItem("currentOrderProductId");
+//   }
+// });
+
+  // Accept order and auto-reject other orders for same product
 $(document).on("click", ".accept-order-btn", function () {
   const orderId = $(this).data("id");
   const orders = JSON.parse(localStorage.getItem("orders")) || [];
   const index = orders.findIndex(o => o.orderId === orderId);
+
   if (index !== -1) {
-    orders[index].status = "accepted";
+    const acceptedOrder = orders[index];
+    const productId = acceptedOrder.productId;
+
+    // Update statuses
+    orders.forEach(order => {
+      if (order.productId === productId) {
+        if (order.orderId === orderId) {
+          order.status = "accepted";
+        } else {
+          order.status = "rejected";
+        }
+      }
+    });
+
     localStorage.setItem("orders", JSON.stringify(orders));
+    localStorage.removeItem("currentOrderProductId");
 
     Swal.fire({
       icon: 'success',
       title: 'Order Accepted',
-      text: 'The order has been accepted successfully!',
+      text: 'This order is accepted. Others were auto-rejected.',
       showConfirmButton: false,
       timer: 1500
     });
 
     renderSellerOrders();
     setTimeout(() => location.reload(), 1600);
-
-    localStorage.removeItem("currentOrderProductId");
   }
 });
+
+
 
 // Reject order
 $(document).on("click", ".reject-order-btn", function () {

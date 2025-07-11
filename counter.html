@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard Counters</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    .counter-card {
+      border-radius: 1rem;
+      box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+    .counter-card:hover {
+      transform: translateY(-5px);
+    }
+    .counter-icon {
+      font-size: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container py-5">
+  <h2 class="text-center mb-4">Admin Dashboard</h2>
+  <div class="row g-4 text-center">
+
+    <div class="col-sm-6 col-md-3">
+      <div class="card counter-card p-3">
+        <div class="card-body">
+          <i class="bi bi-people-fill text-primary counter-icon"></i>
+          <h5 class="mt-3">Users</h5>
+          <h2 class="counter" data-target="1200">0</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-md-3">
+      <div class="card counter-card p-3">
+        <div class="card-body">
+          <i class="bi bi-box-seam text-success counter-icon"></i>
+          <h5 class="mt-3">Products</h5>
+          <h2 class="counter" data-target="300">0</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-md-3">
+      <div class="card counter-card p-3">
+        <div class="card-body">
+          <i class="bi bi-cart-check text-warning counter-icon"></i>
+          <h5 class="mt-3">Orders</h5>
+          <h2 class="counter" data-target="450">0</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-md-3">
+      <div class="card counter-card p-3">
+        <div class="card-body">
+          <i class="bi bi-cash-stack text-danger counter-icon"></i>
+          <h5 class="mt-3">Revenue</h5>
+          <h2 class="counter" data-target="1400">₹0</h2>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const counters = document.querySelectorAll('.counter');
+  counters.forEach(counter => {
+    const updateCount = () => {
+      const target = +counter.getAttribute('data-target');
+      const isCurrency = counter.innerText.includes('₹');
+      const count = parseInt(counter.innerText.replace(/₹/, '')) || 0;
+      const increment = target / 100;
+
+      if (count < target) {
+        counter.innerText = isCurrency ? '₹' + Math.ceil(count + increment) : Math.ceil(count + increment);
+        setTimeout(updateCount, 300);
+      } else {
+        counter.innerText = isCurrency ? '₹' + target : target;
+      }
+    };
+    updateCount();
+  });
+</script>
+
+</body>
+</html>
