@@ -54,36 +54,53 @@ function renderSellerOrders() {
     });
 }
 
+
 // Accept order
 $(document).on("click", ".accept-order-btn", function () {
-    const orderId = $(this).data("id");
-    const orders = JSON.parse(localStorage.getItem("orders")) || [];
-    const index = orders.findIndex(o => o.orderId === orderId);
-    if (index !== -1) {
-        orders[index].status = "accepted";
-        localStorage.setItem("orders", JSON.stringify(orders));
-        alert("Order accepted");
-        renderSellerOrders();
-        location.reload()
+  const orderId = $(this).data("id");
+  const orders = JSON.parse(localStorage.getItem("orders")) || [];
+  const index = orders.findIndex(o => o.orderId === orderId);
+  if (index !== -1) {
+    orders[index].status = "accepted";
+    localStorage.setItem("orders", JSON.stringify(orders));
 
-        localStorage.removeItem("currentOrderProductId");
-    }
+    Swal.fire({
+      icon: 'success',
+      title: 'Order Accepted',
+      text: 'The order has been accepted successfully!',
+      showConfirmButton: false,
+      timer: 1500
+    });
+
+    renderSellerOrders();
+    setTimeout(() => location.reload(), 1600);
+
+    localStorage.removeItem("currentOrderProductId");
+  }
 });
 
 // Reject order
 $(document).on("click", ".reject-order-btn", function () {
-    const orderId = $(this).data("id");
-    const orders = JSON.parse(localStorage.getItem("orders")) || [];
-    const index = orders.findIndex(o => o.orderId === orderId);
-    if (index !== -1) {
-        orders[index].status = "rejected";
-        localStorage.setItem("orders", JSON.stringify(orders));
-        alert("Order rejected");
-        renderSellerOrders();
-        location.reload()
+  const orderId = $(this).data("id");
+  const orders = JSON.parse(localStorage.getItem("orders")) || [];
+  const index = orders.findIndex(o => o.orderId === orderId);
+  if (index !== -1) {
+    orders[index].status = "rejected";
+    localStorage.setItem("orders", JSON.stringify(orders));
 
-        localStorage.removeItem("currentOrderProductId");
-    }
+    Swal.fire({
+      icon: 'warning',
+      title: 'Order Rejected',
+      text: 'The order has been marked as rejected.',
+      showConfirmButton: false,
+      timer: 1500
+    });
+
+    renderSellerOrders();
+    setTimeout(() => location.reload(), 1600);
+
+    localStorage.removeItem("currentOrderProductId");
+  }
 });
 
 // Initial render

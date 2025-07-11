@@ -13,9 +13,9 @@ $(document).ready(function () {
     }
 
     const visibleProducts = products.filter(product => {
-  const productOrder = orders.find(o => o.productId === product.id && o.status === "accepted");
-  return !productOrder; // Exclude accepted orders
-});
+      const productOrder = orders.find(o => o.productId === product.id && o.status === "accepted");
+      return !productOrder; // Exclude accepted orders
+    });
 
 
 
@@ -101,21 +101,21 @@ $(document).ready(function () {
   });
 
   // Filter form submit
- $('#filterForm').on('submit', function (e) {
-  e.preventDefault();
-  applyFilters();
+  $('#filterForm').on('submit', function (e) {
+    e.preventDefault();
+    applyFilters();
 
-  const offcanvasEl = document.getElementById('filterOffcanvas');
-  const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
-  if (offcanvas) offcanvas.hide();
+    const offcanvasEl = document.getElementById('filterOffcanvas');
+    const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
+    if (offcanvas) offcanvas.hide();
 
-  // Fix lingering backdrop
-  setTimeout(() => {
-    $('.offcanvas-backdrop').remove(); // Remove backdrop
-    $('body').removeClass('offcanvas-backdrop'); // Remove class if added
-     $('body').css('overflow', 'auto');
-  }, 300); // wait until animation completes
+    // Fix lingering backdrop
+    setTimeout(() => {
+      $('.offcanvas-backdrop').remove(); // Remove backdrop
+      $('body').removeClass('offcanvas-backdrop'); // Remove class if added
+      $('body').css('overflow', 'auto');
+    }, 300); // wait until animation completes
 
-});
+  });
 
 });

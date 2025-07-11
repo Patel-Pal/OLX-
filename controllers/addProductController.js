@@ -1,14 +1,12 @@
-
 $(document).ready(function () {
   const currentUser = JSON.parse(localStorage.getItem('loggedInUser'));
 
   if (!currentUser || currentUser.role !== 'seller') {
-    alert('Access denied! Only sellers can add products.');
+    showToast('Access denied! Only sellers can add products.', 'error');
     window.location.href = '/views/login.html';
     return;
   }
 
-  // Utilities
   const generateProductId = () => 'PID' + Date.now();
   const loadProducts = () => JSON.parse(localStorage.getItem('products')) || [];
   const saveProducts = (products) => localStorage.setItem('products', JSON.stringify(products));
@@ -20,7 +18,6 @@ $(document).ready(function () {
     reader.readAsDataURL(file);
   };
 
-  // ✅ Detect if any buyer has chatted for this product
   const hasBuyerChats = (productId, sellerId) => {
     const chatData = JSON.parse(localStorage.getItem("chats")) || {};
     for (let chatKey in chatData) {
@@ -38,7 +35,6 @@ $(document).ready(function () {
     return false;
   };
 
-  // Reset form
   const resetForm = () => {
     $('#productForm')[0].reset();
     $('#editingProductId').val('');
@@ -46,12 +42,110 @@ $(document).ready(function () {
     $('#image').val('');
   };
 
-  // ✅ Render all products of the current seller
+
+  
+  const validateForm = () => {
+    let isValid = true;
+    const productName = $('#productName').val().trim();
+    const category = $('#category').val().trim();
+    const price = $('#price').val().trim();
+    const city = $('#city').val().trim();
+    const state = $('#state').val().trim();
+    const description = $('#description').val().trim();
+    const imageFile = $('#image')[0].files[0];
+    const editingProductId = $('#editingProductId').val();
+
+    // Clear previous error states
+    $('.form-control').removeClass('is-invalid');
+
+    // Product Name validation
+    if (!productName) {
+      showToast('Product name is required.', 'error');
+      $('#productName').addClass('is-invalid');
+      isValid = false;
+    } else if (productName.length > 100) {
+      showToast('Product name must be less than 100 characters.', 'error');
+      $('#productName').addClass('is-invalid');
+      isValid = false;
+    }
+
+    // Category validation
+    if (!category) {
+      showToast('Category is required.', 'error');
+      $('#category').addClass('is-invalid');
+      isValid = false;
+    } else if (category.length > 50) {
+      showToast('Category must be less than 50 characters.', 'error');
+      $('#category').addClass('is-invalid');
+      isValid = false;
+    }
+
+    // Price validation
+    if (!price) {
+      showToast('Price is required.', 'error');
+      $('#price').addClass('is-invalid');
+      isValid = false;
+    } else if (isNaN(price) || parseFloat(price) <= 0) {
+      showToast('Price must be a positive number.', 'error');
+      $('#price').addClass('is-invalid');
+      isValid = false;
+    } else if (parseFloat(price) > 1000000) {
+      showToast('Price cannot exceed ₹1,000,000.', 'error');
+      $('#price').addClass('is-invalid');
+      isValid = false;
+    }
+
+    // City validation
+    if (!city) {
+      showToast('City is required.', 'error');
+      $('#city').addClass('is-invalid');
+      isValid = false;
+    } else if (city.length > 50) {
+      showToast('City must be less than 50 characters.', 'error');
+      $('#city').addClass('is-invalid');
+      isValid = false;
+    }
+
+    // State validation
+    if (!state) {
+      showToast('State is required.', 'error');
+      $('#state').addClass('is-invalid');
+      isValid = false;
+    } else if (state.length > 50) {
+      showToast('State must be less than 50 characters.', 'error');
+      $('#state').addClass('is-invalid');
+      isValid = false;
+    }
+
+    // Description validation
+    if (!description) {
+      showToast('Description is required.', 'error');
+      $('#description').addClass('is-invalid');
+      isValid = false;
+    } else if (description.length > 500) {
+      showToast('Description must be less than 500 characters.', 'error');
+      $('#description').addClass('is-invalid');
+      isValid = false;
+    }
+
+    // Image validation (only required for new products)
+    if (!editingProductId && !imageFile) {
+      showToast('Product image is required.', 'error');
+      $('#image').addClass('is-invalid');
+      isValid = false;
+    } else if (imageFile && imageFile.size > 5 * 1024 * 1024) { // 5MB limit
+      showToast('Image size must be less than 5MB.', 'error');
+      $('#image').addClass('is-invalid');
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
   const displaySellerProducts = () => {
     const products = loadProducts();
     const sellerProducts = products.filter(p => p.seller_id === currentUser.user_id);
     const container = $('#sellerProducts');
-    const orders = JSON.parse(localStorage.getItem("orders")) || {};
     container.empty();
 
     if (sellerProducts.length === 0) {
@@ -61,9 +155,9 @@ $(document).ready(function () {
 
     sellerProducts.forEach(product => {
       const showChatBtn = hasBuyerChats(product.id, product.seller_id);
-
       const orders = JSON.parse(localStorage.getItem("orders")) || [];
       const order = orders.find(o => o.productId === product.id && o.sellerId === currentUser.user_id && o.status === "pending");
+      
       let orderActionBtns = '';
       if (order) {
         orderActionBtns = `
@@ -73,7 +167,6 @@ $(document).ready(function () {
           </div>
         `;
       }
-
 
       const card = `
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
@@ -95,7 +188,6 @@ $(document).ready(function () {
                   data-product-id="${product.id}" data-seller-id="${product.seller_id}">
                   <i class="fa fa-comments me-1"></i> Chat with Buyer
                 </button>` : ''}
-
               ${orderActionBtns}
             </div>
           </div>
@@ -106,43 +198,28 @@ $(document).ready(function () {
     });
   };
 
-  // ✅ Accept order
   $(document).on('click', '.accept-order-btn', function () {
     const orderId = $(this).data('id');
     const orders = JSON.parse(localStorage.getItem("orders")) || [];
-    const products = loadProducts(); // Your function to load all products
+    const products = loadProducts();
 
     const index = orders.findIndex(o => o.orderId === orderId);
     if (index !== -1) {
       const productId = orders[index].productId;
-
-      // Update order and product status
       orders[index].status = "accepted";
-      const updatedProducts = products.map(p => {
-        if (p.id === productId) {
-          return { ...p, status: "ordered" }; // Optional: mark as ordered
-        }
-        return p;
-      });
+      const updatedProducts = products.map(p => p.id === productId ? { ...p, status: "ordered" } : p);
 
-      // Save changes
       localStorage.setItem("orders", JSON.stringify(orders));
       saveProducts(updatedProducts);
 
-      alert("Order accepted!");
-
+      showToast("Order accepted successfully!", 'success');
       localStorage.removeItem("currentOrderProductId");
 
-
-      // ✅ Re-render
-      displaySellerProducts?.(); // If showing pending orders list
-      renderHistory?.("accepted"); // Show updated list in history panel
+      displaySellerProducts?.();
+      renderHistory?.("accepted");
     }
   });
 
-
-
-  // ✅ Reject order
   $(document).on('click', '.reject-order-btn', function () {
     const orderId = $(this).data('id');
     const orders = JSON.parse(localStorage.getItem("orders")) || [];
@@ -152,20 +229,14 @@ $(document).ready(function () {
       orders[index].status = "rejected";
       localStorage.setItem("orders", JSON.stringify(orders));
 
-      alert("Order rejected!");
-
+      showToast("Order rejected.", 'warning');
       localStorage.removeItem("currentOrderProductId");
 
-
-      // ✅ Re-render
       displaySellerProducts?.();
       renderHistory?.("rejected");
     }
   });
 
-
-
-  // Handle "Chat with Buyer" button
   $(document).on('click', '.chatBtn', function () {
     const productId = $(this).data('product-id');
     const sellerId = $(this).data('seller-id');
@@ -174,9 +245,11 @@ $(document).ready(function () {
     window.location.href = "/views/chat.html";
   });
 
-  // Submit add/edit form
   $('#productForm').submit(function (e) {
     e.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
     const id = $('#editingProductId').val() || generateProductId();
     const products = loadProducts();
     const imageFile = $('#image')[0].files[0];
@@ -203,10 +276,10 @@ $(document).ready(function () {
 
       if (index !== -1) {
         products[index] = productData;
-        alert("Product updated successfully!");
+        showToast("Product updated successfully!", 'info');
       } else {
         products.push(productData);
-        alert("Product added successfully!");
+        showToast("Product added successfully!", 'success');
       }
 
       saveProducts(products);
@@ -219,9 +292,12 @@ $(document).ready(function () {
     } else {
       saveProduct(existingImage);
     }
+
+    //  $("#addProductModal").click(function(){
+    //   $(this).attr('data-bs-dismiss', 'modal');
+    //  })
   });
 
-  // Edit Product
   $(document).on('click', '.edit-btn', function () {
     const productId = $(this).data('id');
     const products = loadProducts();
@@ -240,19 +316,37 @@ $(document).ready(function () {
       modal.show();
     }
   });
+$(document).on('click', '.delete-btn', function () {
+  const productId = $(this).data('id');
 
-  // Delete Product
-  $(document).on('click', '.delete-btn', function () {
-    const productId = $(this).data('id');
-    if (confirm("Are you sure you want to delete this product?")) {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel'
+  }).then((result) => {
+    if (result.isConfirmed) {
       let products = loadProducts();
       products = products.filter(p => p.id !== productId);
       saveProducts(products);
+      // showToast("Product deleted successfully.", 'success');
       displaySellerProducts();
+
+      Swal.fire({
+        title: 'Deleted!',
+        text: 'Product has been deleted.',
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false
+      });
     }
   });
-
-  // Initial render
-  displaySellerProducts();
 });
 
+
+  displaySellerProducts();
+});

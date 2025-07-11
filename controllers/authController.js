@@ -14,35 +14,33 @@ $(document).ready(function () {
 
     // Validation
     if (name.length < 3) {
-      alert('Name must be at least 3 characters long.');
+      showToast('Name must be at least 3 characters long.', 'warning');
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      alert('Please enter a valid email address.');
+      showToast('Please enter a valid email address.', 'warning');
       return;
     }
 
     if (password.length < 6) {
-      alert('Password must be at least 6 characters long.');
+      showToast('Password must be at least 6 characters long.', 'warning');
       return;
     }
 
     if (!role) {
-      alert('Please select a role.');
+      showToast('Please select a role.', 'warning');
       return;
     }
 
-    // Check if user already exists
     let users = loadUsers();
 
     if (users.find(user => user.email === email)) {
-      alert('User already registered with this email!');
+      showToast('User already registered with this email!', 'error');
       return;
     }
 
-    // Create and save user
     const newUser = {
       user_id: generateUserId(),
       name,
@@ -54,54 +52,63 @@ $(document).ready(function () {
     users.push(newUser);
     saveUsers(users);
 
-    alert('Registration successful!');
-    window.location.href = '/views/login.html';
+    showToast('Registration successful! Redirecting to login...', 'success');
+    setTimeout(() => window.location.href = '/views/login.html', 1500);
   });
 
   // === Login Handler ===
   $('#loginForm').on('submit', function (e) {
-  e.preventDefault();
+    e.preventDefault();
 
-  const loginIdentifier = $('#loginIdentifier').val().trim().toLowerCase();
-  const password = $('#loginPassword').val().trim();
+    const loginIdentifier = $('#loginIdentifier').val().trim().toLowerCase();
+    const password = $('#loginPassword').val().trim();
 
-  // Basic validation
-  if (!loginIdentifier || !password) {
-    alert('Both fields are required!');
-    return;
-  }
+    if (!loginIdentifier || !password) {
+      showToast('Both fields are required!', 'warning');
+      return;
+    }
 
-  // Optional: Check if identifier is email or username
-  const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(loginIdentifier);
-  if (!isEmail && loginIdentifier.length < 3) {
-    alert('Enter a valid email or username (min 3 characters)');
-    return;
-  }
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(loginIdentifier);
+    if (!isEmail && loginIdentifier.length < 3) {
+      showToast('Enter a valid email or username (min 3 characters)', 'warning');
+      return;
+    }
 
-  const users = loadUsers();
+    const users = loadUsers();
 
-  const matchedUser = users.find(user =>
-    (user.email.toLowerCase() === loginIdentifier || user.name.toLowerCase() === loginIdentifier) &&
-    user.password === password
-  );
+    const matchedUser = users.find(user =>
+      (user.email.toLowerCase() === loginIdentifier || user.name.toLowerCase() === loginIdentifier) &&
+      user.password === password
+    );
 
-  if (matchedUser) {
-    localStorage.setItem('loggedInUser', JSON.stringify(matchedUser));
-    alert(`Login successful as ${matchedUser.role}!`);
-    window.location.href = '/views/home.html';
-  } else {
-    alert('Invalid credentials!');
-  }
-});
+    if (matchedUser) {
+      localStorage.setItem('loggedInUser', JSON.stringify(matchedUser));
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Successful',
+        text: `Logged in as ${matchedUser.role}!`,
+        showConfirmButton: false,
+        timer: 1500
+      });
+
+      setTimeout(() => {
+        window.location.href = '/views/home.html';
+      }, 1500);
+    }
+    else {
+      showToast('Invalid credentials! Please try again.', 'error');
+    }
+  });
 
   // === Logout Handler ===
   $('#logoutBtn').on('click', function () {
     localStorage.removeItem('loggedInUser');
-    alert('You have been logged out!');
-    window.location.href = '/views/login.html';
+    // showToast('You havebeen logged out!', 'info');
+    setTimeout(() => window.location.href = '/views/login.html', 1000);
   });
 
-  //  Show user name or role on home page 
+  // Show user name or role on home page 
   const currentUser = JSON.parse(localStorage.getItem('loggedInUser'));
   if (currentUser && $('#welcomeMessage').length) {
     $('#welcomeMessage').html(`Welcome, <strong>${currentUser.name}</strong>! You are logged in as <strong>${currentUser.role}</strong>.`);

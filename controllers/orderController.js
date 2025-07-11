@@ -5,7 +5,7 @@ const currentUser = JSON.parse(localStorage.getItem("loggedInUser"));
 const orders = JSON.parse(localStorage.getItem("orders")) || [];
 let productId = localStorage.getItem("currentOrderProductId");
 
-// fallback: if not found, check buyer's accepted/rejected orders
+// ✅ Fallback for buyers if productId not found
 if (!productId && currentUser?.role === "buyer") {
   const fallbackOrder = orders.find(o => o.buyerId === currentUser.user_id && o.status !== "pending");
   if (fallbackOrder) {
@@ -17,18 +17,17 @@ const product = products.find(p => p.id === productId);
 const seller = users.find(u => u.user_id === product?.seller_id);
 const myOrder = orders.find(o => o.productId === productId && o.buyerId === currentUser?.user_id);
 
-// ✅ Render product details if not already accepted/rejected
+// ✅ Render product details
 $(document).ready(function () {
-
-
   if (!product || !productId) {
-  $("#orderDetails").html(`
-    <div class="alert alert-warning text-center p-4">
-      <strong>No product selected.</strong><br>
-      Please go back and select a product to order.
-    </div>
-  `);
-}
+    $("#orderDetails").html(`
+      <div class="alert alert-warning text-center p-4">
+        <strong>No product selected.</strong><br>
+        Please go back and select a product to order.
+      </div>
+    `);
+    return;
+  }
 
   if (product && seller) {
     if (myOrder && myOrder.status !== "pending") {
@@ -37,7 +36,7 @@ $(document).ready(function () {
           This order has been <strong>${myOrder.status}</strong> and moved to your Order History.
         </div>
       `);
-      return; // ✅ Now valid inside a function
+      return;
     }
 
     let orderHTML = `
@@ -73,14 +72,18 @@ $(document).ready(function () {
   }
 });
 
-
 // ✅ Place order
 $(document).on("click", "#placeOrder", function () {
   let allOrders = JSON.parse(localStorage.getItem("orders")) || [];
   const alreadyOrdered = allOrders.find(o => o.productId === product.id && o.buyerId === currentUser.user_id);
 
   if (alreadyOrdered) {
-    alert("You already placed this order.");
+    Swal.fire({
+      icon: 'info',
+      title: 'Already Ordered',
+      text: 'You have already placed this order.',
+      confirmButtonText: 'OK'
+    });
     return;
   }
 
@@ -93,33 +96,44 @@ $(document).on("click", "#placeOrder", function () {
   });
 
   localStorage.setItem("orders", JSON.stringify(allOrders));
-  alert("Order placed! Waiting for seller approval.");
-  location.reload();
+
+  Swal.fire({
+    icon: 'success',
+    title: 'Order Placed!',
+    text: 'Waiting for seller approval.',
+    showConfirmButton: false,
+    timer: 1500
+  });
+
+  setTimeout(() => location.reload(), 1600);
 });
 
 // ✅ Update order status
 function updateOrderStatus(orderId, status) {
   let allOrders = JSON.parse(localStorage.getItem("orders")) || [];
   const index = allOrders.findIndex(o => o.orderId === orderId);
+
   if (index !== -1) {
     allOrders[index].status = status;
     localStorage.setItem("orders", JSON.stringify(allOrders));
-    alert(`Order ${status}`);
 
-    // If viewing the current product, refresh the section
-    const updatedOrder = allOrders[index];
-    if (updatedOrder.productId === productId) {
-      location.reload();
+    Swal.fire({
+      icon: status === 'accepted' ? 'success' : 'warning',
+      title: `Order ${status.charAt(0).toUpperCase() + status.slice(1)}`,
+      text: `The order has been ${status}.`,
+      showConfirmButton: false,
+      timer: 1500
+    });
+
+    if (allOrders[index].productId === productId) {
+      setTimeout(() => location.reload(), 1600);
     }
 
-    // Re-render history
     renderHistory(status);
 
-    // Switch to the appropriate tab
     $("#historyTabs .nav-link").removeClass("active");
     $(`#historyTabs .nav-link[data-status="${status}"]`).addClass("active");
 
-    // Open sidebar if not already visible
     const historyOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(document.getElementById('orderHistoryCanvas'));
     if (!document.getElementById('orderHistoryCanvas').classList.contains('show')) {
       historyOffcanvas.show();
@@ -148,11 +162,13 @@ function renderHistory(status) {
     const buyer = users.find(u => u.user_id === o.buyerId);
     const seller = users.find(u => u.user_id === o.sellerId);
 
-    const info = currentUser.role === "seller" ? `<strong>Buyer:</strong> ${buyer.name}` : `<strong>Seller:</strong> ${seller.name}`;
+    const info = currentUser.role === "seller"
+      ? `<strong>Buyer:</strong> ${buyer.name}`
+      : `<strong>Seller:</strong> ${seller.name}`;
 
     const card = `
       <div class="col-12">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm mb-3">
           <div class="row g-0">
             <div class="col-md-4">
               <img src="${prod.image}" class="img-fluid rounded-start" alt="${prod.name}" style="height: 100%; object-fit: cover;">
@@ -171,6 +187,7 @@ function renderHistory(status) {
         </div>
       </div>
     `;
+
     container.append(card);
   });
 }
@@ -183,7 +200,7 @@ $("#historyTabs .nav-link").on("click", function () {
   renderHistory(status);
 });
 
-// ✅ On page load
+// ✅ Initial history load
 if (currentUser) {
   renderHistory("pending");
   $("#historyBtnWrapper").removeClass("d-none");
