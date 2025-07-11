@@ -113,7 +113,9 @@ $(document).ready(function () {
   setTimeout(() => {
     $('.offcanvas-backdrop').remove(); // Remove backdrop
     $('body').removeClass('offcanvas-backdrop'); // Remove class if added
+     $('body').css('overflow', 'auto');
   }, 300); // wait until animation completes
+
 });
 
 });

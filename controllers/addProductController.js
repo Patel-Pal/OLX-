@@ -68,9 +68,9 @@ $(document).ready(function () {
       if (order) {
         orderActionBtns = `
           <div class="d-flex gap-2">
-    <button class="btn btn-sm btn-success w-50 accept-order-btn" data-id="${order.orderId}">Accept Order</button>
-    <button class="btn btn-sm btn-danger w-50 reject-order-btn" data-id="${order.orderId}">Reject Order</button>
-  </div>
+            <button class="btn btn-sm btn-success w-50 accept-order-btn" data-id="${order.orderId}">Accept Order</button>
+            <button class="btn btn-sm btn-danger w-50 reject-order-btn" data-id="${order.orderId}">Reject Order</button>
+          </div>
         `;
       }
 

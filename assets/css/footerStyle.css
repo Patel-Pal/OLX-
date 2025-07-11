@@ -1,0 +1,92 @@
+ /* Footer base styles */
+    .footer {
+      background-color: #002f34; /* OLX primary color */
+      color: white;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .footer a {
+      color: white;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer a:hover {
+      color: #00b0b6; /* OLX secondary color */
+    }
+
+    .footer h5 {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .footer p, .footer li {
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .footer .list-unstyled li {
+      margin-bottom: 0.5rem;
+    }
+
+    /* Accordion styles */
+    .accordion-button {
+      background-color: #002f34;
+      color: white;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .accordion-button:not(.collapsed) {
+      background-color: #004b50;
+      color: white;
+    }
+
+    .accordion-button:focus {
+      box-shadow: none;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .accordion-body {
+      background-color: #002f34;
+      color: white;
+      padding: 1rem;
+    }
+
+    .accordion-item {
+      border: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Social icons */
+    .footer .fa-brands {
+      font-size: 1.5rem;
+      transition: transform 0.3s ease;
+    }
+
+    .footer .fa-brands:hover {
+      transform: scale(1.2);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 767.98px) {
+      .footer .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      .accordion-button {
+        padding: 0.75rem 1rem;
+      }
+      .accordion-body {
+        padding: 1rem 1.5rem;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .footer .row {
+        align-items: flex-start;
+      }
+      .footer .col-md-4 {
+        padding: 0 1rem;
+      }
+    }

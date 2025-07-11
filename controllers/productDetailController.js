@@ -50,10 +50,34 @@ $(document).ready(function () {
   container.html(detailHTML);
 
 
-  $("#chatBtn").click(function () {
+  // $("#chatBtn").click(function () {
+  //   localStorage.setItem("chatProductId", product.id);
+  //   localStorage.setItem("chatSellerId", product.seller_id);
+  //   window.location.href = "chat.html";
+  // });
+
+
+  $("#chatBtn").click(function (e) {
+    e.preventDefault(); // ⛔ Prevent default <a> link action
+
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+
+    if (!loggedInUser) {
+      alert("Please log in to chat with the seller.");
+      return;
+    }
+
+    // ✅ Prevent chatting with yourself
+    if (loggedInUser.user_id === product.seller_id) {
+      alert("⚠️ You cannot chat with yourself.");
+      return;
+    }
+
+    // ✅ Save and redirect to chat page
     localStorage.setItem("chatProductId", product.id);
     localStorage.setItem("chatSellerId", product.seller_id);
     window.location.href = "chat.html";
   });
+
 });
 

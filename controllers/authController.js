@@ -60,26 +60,39 @@ $(document).ready(function () {
 
   // === Login Handler ===
   $('#loginForm').on('submit', function (e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    const loginIdentifier = $('#loginIdentifier').val().trim().toLowerCase();
-    const password = $('#loginPassword').val().trim();
+  const loginIdentifier = $('#loginIdentifier').val().trim().toLowerCase();
+  const password = $('#loginPassword').val().trim();
 
-    let users = loadUsers();
+  // Basic validation
+  if (!loginIdentifier || !password) {
+    alert('Both fields are required!');
+    return;
+  }
 
-    const matchedUser = users.find(user =>
-      (user.email === loginIdentifier || user.name.toLowerCase() === loginIdentifier) &&
-      user.password === password
-    );
+  // Optional: Check if identifier is email or username
+  const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(loginIdentifier);
+  if (!isEmail && loginIdentifier.length < 3) {
+    alert('Enter a valid email or username (min 3 characters)');
+    return;
+  }
 
-    if (matchedUser) {
-      localStorage.setItem('loggedInUser', JSON.stringify(matchedUser));
-      alert(`Login successful as ${matchedUser.role}!`);
-      window.location.href = '/views/home.html';
-    } else {
-      alert('Invalid credentials!');
-    }
-  });
+  const users = loadUsers();
+
+  const matchedUser = users.find(user =>
+    (user.email.toLowerCase() === loginIdentifier || user.name.toLowerCase() === loginIdentifier) &&
+    user.password === password
+  );
+
+  if (matchedUser) {
+    localStorage.setItem('loggedInUser', JSON.stringify(matchedUser));
+    alert(`Login successful as ${matchedUser.role}!`);
+    window.location.href = '/views/home.html';
+  } else {
+    alert('Invalid credentials!');
+  }
+});
 
   // === Logout Handler ===
   $('#logoutBtn').on('click', function () {

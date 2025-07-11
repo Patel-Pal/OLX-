@@ -45,19 +45,7 @@
     }
   }
 
-  /* Brand font size */
-  .navbar-brand {
-    font-size: 1.5rem;
-  }
-
-  /* Profile icon alignment */
-  #profileIcon i {
-    color: #333;
-  }
-
-  #profileIcon:hover i {
-    color: #007bff;
-  }
+  
 
   
 
